@@ -39,7 +39,7 @@ set_text_mode:
 print_with_memory:
 	mov ax, 0xb800
 	mov ds, ax
-	mov byte [0x00], 'b'
+	mov byte [0x00], 'B'
 	mov byte [0x02], 'o'
 	mov byte [0x04], 'o'
 	mov byte [0x06], 't'
@@ -114,8 +114,8 @@ read_ata_disk:
 
 
 
-message: db "booting...",13,10,0
-msg_err_to_loader: db "loading loader error!",13,10,0
+message: db "Booting...",13,10,0
+msg_err_to_loader: db "Loading loader error!",13,10,0
 
 times 510 - ($ - $$) db 0
 db 0x55, 0xaa
