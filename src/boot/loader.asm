@@ -8,6 +8,7 @@ loader_start:
 		
 	call get_sys_mem_map
 
+
 .load_protected_mode:
 	cli 
 
@@ -26,7 +27,10 @@ loader_start:
 
 	jmp code_selector:protected_mode_start
 
+	mov si, msg_err_jump 
+	call print_with_interrupt
 
+	jmp $
 
 
 get_sys_mem_map:
@@ -79,6 +83,7 @@ error:
 
 loader_message: db "Loading...",10, 13, 0
 msg_err: db "Get system memory map error!", 10, 13, 0
+msg_err_jump: db "Switch to 32 bits mode error!", 10, 13, 0
 msg_success: db "Get system memory map succeed.", 10, 13, 0
 
 gdt_start:
@@ -122,11 +127,66 @@ protected_mode_start:
 	mov ebp, 0x00200000
 	mov esp, ebp
 
+	mov byte [0xb8000], 'H'
+	mov eax, 4 ; lba of beginning
+	mov ecx, 20 ; sector count
+	mov edi, 0x100000 ; target address
+
+	call read_ata_disk
+
+
+	jmp code_selector:0x100000
+
 	jmp $
+
+read_ata_disk:
+	mov ebx, eax ; backup the LBA
+
+	mov eax, ecx
+	mov dx, 0x1F2 ; set sector count
+	out dx, al
+
+	mov eax, ebx
+	mov dx, 0x1F3
+	out dx, al
+
+	mov dx,0x1F4
+	mov eax, ebx
+	shr eax, 8
+	out dx, al
+
+	mov dx, 0x1F5
+	mov eax, ebx
+	shr eax, 16
+	out dx, al
+
+	shr eax, 24
+	or eax, 0xE0  ; set master disk
+	mov dx, 0x1F6 ; set high 4 bits of LBA
+	out dx, al
+
+	mov dx, 0x1F7
+	mov al, 0x20 ; read command
+	out dx, al
+.next_sector:
+	push ecx
+.do_again:
+	mov dx, 0x1F7
+	in al, dx
+	test al, 8 ; check DQR bit
+	jz .do_again 
+
+	mov ecx, 256
+	mov dx, 0x1F0
+	rep insw 
+	pop ecx
+	loop .next_sector
+
+	ret
+
 
 times 512 - ($ - $$) db 0
 ards_count: dw 0
 ards_buffer:
-
 
 
