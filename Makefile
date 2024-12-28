@@ -12,7 +12,7 @@ ${os_img}: ${bootloader_bin_file}
 	qemu-img create build/${os_img} ${os_img_size}
 	dd if=build/boot.bin of=build/${os_img} bs=512 count=1
 	dd if=/dev/zero bs=512 count=1 >> build/${os_img}
-	dd if=build/loader.bin bs=512 count=1 >> build/${os_img}
+	dd if=build/loader.bin bs=512 count=2 >> build/${os_img}
 
 
 
