@@ -100,9 +100,9 @@ read_ata_disk:
 .do_again:
 	mov dx, 0x1F7
 	in al, dx
+
 	test al, 8 ; check DQR bit
 	jz .do_again 
-
 	mov ecx, 256
 	mov dx, 0x1F0
 	rep insw 

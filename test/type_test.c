@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "test.h"
 #include "type.h"
 
 int main(){
@@ -9,13 +10,15 @@ int main(){
 	printf("size of i32: %d\n", sizeof(i32));
 	printf("size of i64: %d\n", sizeof(i64));
 
+	printf("size of u8: %d\n", sizeof(u8));
+	printf("size of u16: %d\n", sizeof(u16));
+	printf("size of u32: %d\n", sizeof(u32));
+	printf("size of u64: %d\n", sizeof(u64));
+
+
 
 	printf_green("\ntype test is finished!\n");
 
 	
 }
 
-void printf_green(const char *s)
-{
-    printf("\033[0m\033[1;32m%s\033[0m", s);
-}
