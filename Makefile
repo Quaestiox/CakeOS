@@ -14,6 +14,10 @@ kernel_bin_file := build/kernel.bin
 kernel_c_file := ${wildcard ${kernel_dir}/*.c}
 kernel_c_object_file := ${patsubst ${kernel_dir}/%.c, build/kernel/%.o, ${kernel_c_file}}
 
+test_dir ?= test
+test_src_file := ${wildcard ${test_dir}/*.c}
+test_exec_file := ${patsubst ${test_dir}/%.c, build/test/%, ${test_src_file}}
+
 include ?= src/include
 ld_flags := -ffreestanding -O0 -nostdlib 
 gcc_flags := -g -ffreestanding -falign-jumps -falign-functions -falign-labels        \
@@ -23,7 +27,7 @@ gcc_flags := -g -ffreestanding -falign-jumps -falign-functions -falign-labels   
 
 all: mkdir shell ${os_img}
 
-.PHONY: all clean run auto debug
+.PHONY: all clean run auto debug test
 
 ${os_img}: ${bootloader_bin_file} ${kernel_bin_file} 
 	qemu-img create build/${os_img} ${os_img_size}
@@ -49,6 +53,7 @@ build/kernel.bin: ${kernel_object_file} ${kernel_c_object_file}
 mkdir:
 	mkdir build
 	mkdir build/kernel
+	mkdir build/test
 
 shell:
 
@@ -62,3 +67,9 @@ auto: clean all run
 
 debug: 
 	qemu-system-x86_64 -hda ./build/${os_img} -S -s
+
+test: mkdir ${test_exec_file}
+
+build/test/%: ${test_dir}/%.c
+	gcc -I${include} $< -o $@
+	./$@

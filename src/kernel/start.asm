@@ -1,9 +1,10 @@
 [bits 32]
 global _start
-
+extern kernel_main
 
 _start:
-	mov byte [0xb8000], 'K'
+	
+	call kernel_main
 
 	jmp $
 
