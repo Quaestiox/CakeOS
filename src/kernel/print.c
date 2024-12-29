@@ -10,18 +10,31 @@ ColorCode color = White | (Black << 4);
 void set_color(u8 fore, u8 back){
 	color = fore | (back << 4);
 }
-/*
+
+void clean_row(i32 row){
+	struct ScreenChar empty = (struct ScreenChar){
+		character: ' ',
+		color: color,			
+	};
+	for (i32 i = 0; i < VGA_WIDTH; i++){
+		buffer[i + VGA_WIDTH * row] = empty;
+	}
+}
+
+
 void scroll_up(){
 	for(i32 row = 0; row < VGA_HEIGHT - 1; row ++){
 		for(i32 col = 0; col < VGA_WIDTH ; col ++){
 			buffer[col + VGA_WIDTH * row] = buffer[col + VGA_WIDTH * (row + 1)];
 		}
+		
 	}
+	clean_row(VGA_HEIGHT-1);
 }
-*/
+
 void new_line(){
 	if (row_pos >= VGA_HEIGHT - 1){
-//		scroll_up();
+		scroll_up();
 		col_pos = 0;
 	}else{
 		row_pos ++;
@@ -53,16 +66,6 @@ void print_string(char* str){
 		}
 
 		print_char(c);
-	}
-}
-
-void clean_row(u8 row){
-	struct ScreenChar empty = (struct ScreenChar){
-		character: ' ',
-		color: color,			
-	};
-	for (i32 i = 0; i < VGA_WIDTH; i++){
-		buffer[i + VGA_WIDTH * row] = empty;
 	}
 }
 

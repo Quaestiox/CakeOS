@@ -24,7 +24,7 @@ start:
 	cmp word [0x900], 0x7777
 	jne .err_to_loader
 
-	jmp 0:902
+	jmp 0:0x902
 
 .err_to_loader:
 	mov si, msg_err_to_loader
