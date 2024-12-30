@@ -26,7 +26,7 @@ test_exec_file := ${patsubst ${test_dir}/%.c, test_build/%, ${test_src_file}}
 
 
 
-include ?= src/include
+include ?= ./src/include
 ld_flags := -ffreestanding -O0 -nostdlib 
 gcc_flags := -g -ffreestanding -falign-jumps -falign-functions -falign-labels        \
 			 -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions \
@@ -43,7 +43,7 @@ ${os_img}: ${bootloader_bin_file} ${kernel_bin_file}
 	dd if=/dev/zero bs=512 count=1 >> build/${os_img}
 	dd if=build/loader.bin bs=512 count=2 conv=sync >> build/${os_img}
 	dd if=build/kernel.bin >> build/${os_img}
-	dd if=/dev/zero bs=512 count=25 >> build/${os_img}
+	dd if=/dev/zero bs=512 count=20 >> build/${os_img}
 
 build/%.bin: ${bootloader_dir}/%.asm
 	nasm -f bin $< -o $@
@@ -57,8 +57,14 @@ build/kernel/%.o: ${kernel_dir}/%.c
 build/lib/%.o: ${lib_dir}/%.c
 	i686-elf-gcc -I${include} ${gcc_flags} -std=gnu99 -c $< -o $@
 
-build/kernel.bin: ${kernel_object_file} ${kernel_c_object_file} ${lib_c_object_file} 
-	i686-elf-ld -g -relocatable ${kernel_object_file} ${kernel_c_object_file} ${lib_c_object_file} \
+build/kernel.bin: build/kernel/start_asm.o \
+					build/kernel/idt_asm.o \
+					build/kernel/io_asm.o \
+   					${kernel_c_object_file} ${lib_c_object_file} 
+	i686-elf-ld -g -relocatable build/kernel/start_asm.o \
+								build/kernel/idt_asm.o \
+								build/kernel/io_asm.o \
+								${kernel_c_object_file} ${lib_c_object_file} \
 				-o build/kernel/kernel_all.o
 	i686-elf-gcc -T ${linker_script} build/kernel/kernel_all.o -o build/kernel.bin ${ld_flags} ${gcc_flags}
 

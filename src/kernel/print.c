@@ -1,5 +1,7 @@
 #include "config.h"
 #include "type.h"
+#include "crt.h"
+#include "io.h"
 
 struct ScreenChar* buffer = (struct ScreenChar*)0xb8000;
 i32 row_pos = 0;
@@ -42,6 +44,20 @@ void new_line(){
 	}
 }
 
+void set_cursor(){
+	
+	u32 pos = row_pos * VGA_WIDTH + col_pos;
+	
+	u8 cursor_high = pos / 256;
+	u8 cursor_low = pos % 256;
+
+	outb(CRT_ADDR_REG, CRT_CURSOR_H);
+	outb(CRT_DATA_REG, cursor_high);
+	outb(CRT_ADDR_REG, CRT_CURSOR_L);
+	outb(CRT_DATA_REG, cursor_low);
+	
+}
+
 void print_char(char c){
 	if(c == '\n'){
 		new_line();
@@ -55,6 +71,7 @@ void print_char(char c){
 
 		col_pos ++;
 	}
+	set_cursor();
 }
 
 void print_string(char* str){
@@ -74,4 +91,5 @@ void screen_clean(){
 		clean_row(row);
 	}
 }
+
 

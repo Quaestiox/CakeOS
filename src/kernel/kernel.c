@@ -1,6 +1,8 @@
 #include "kernel.h"
 #include "print.h"
 #include "idt.h"
+#include "crt.h"
+#include "io.h"
 
 extern void problem();
 
@@ -10,7 +12,13 @@ void kernel_main(){
 	print_char('H');
 	print_string("hello!\n");
 	print_string("ooo!\n");
+
+	print_string("ooo!\n");
 	idt_init();
 
-	problem();
+	print_string("hello\n");
+	
+	print_char('A');
+	while(1){
+	}
 }

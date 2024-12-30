@@ -117,6 +117,7 @@ data_selector equ gdt_data - gdt_start
 
 
 [bits 32]
+
 protected_mode_start:
 	mov ax, data_selector
 	mov ds, ax

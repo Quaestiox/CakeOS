@@ -14,7 +14,7 @@ struct idt_desc{
 struct idtr_desc{
 	u16 limit;
 	u32 base;
-};
+} __attribute__((packed));
 
 
 void idt_init();

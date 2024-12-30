@@ -4,7 +4,6 @@
 #include "print.h"
 
 extern void idt_load(void* ptr);
-
 struct idt_desc idt_descriptor_table[INTERRUPT_COUNT];
 struct idtr_desc idtr_descriptor;
 
@@ -29,7 +28,8 @@ void idt_init(){
 
 	idt_set(0, idt_0);
 	print_string("idt!\n");
-	idt_load(&idtr_descriptor);
+	idt_load((void*)&idtr_descriptor);
+	print_string("idt!2\n");
 }
 
 
