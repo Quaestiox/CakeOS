@@ -7,16 +7,23 @@ bootloader_bin_file := ${patsubst ${bootloader_dir}/%.asm, build/%.bin, ${bootlo
 
 linker_script ?= src/linker_script/linker.ld
 kernel_dir ?= src/kernel
-kernel_asm_file := ${kernel_dir}/start.asm
-kernel_object_file := ${patsubst ${kernel_dir}/%.asm, build/kernel/%.o, ${kernel_asm_file}}
+kernel_asm_file := ${wildcard ${kernel_dir}/*.asm}
+kernel_object_file := ${patsubst ${kernel_dir}/%.asm, build/kernel/%_asm.o, ${kernel_asm_file}}
 kernel_bin_file := build/kernel.bin
 
 kernel_c_file := ${wildcard ${kernel_dir}/*.c}
 kernel_c_object_file := ${patsubst ${kernel_dir}/%.c, build/kernel/%.o, ${kernel_c_file}}
 
+lib_dir ?= src/lib
+lib_c_file := ${wildcard ${lib_dir}/*.c}
+lib_c_object_file := ${patsubst ${lib_dir}/%.c, build/lib/%.o, ${lib_c_file}}
+
+
+
 test_dir ?= test
 test_src_file := ${wildcard ${test_dir}/*.c}
 test_exec_file := ${patsubst ${test_dir}/%.c, test_build/%, ${test_src_file}}
+
 
 
 include ?= src/include
@@ -36,25 +43,30 @@ ${os_img}: ${bootloader_bin_file} ${kernel_bin_file}
 	dd if=/dev/zero bs=512 count=1 >> build/${os_img}
 	dd if=build/loader.bin bs=512 count=2 conv=sync >> build/${os_img}
 	dd if=build/kernel.bin >> build/${os_img}
-	dd if=/dev/zero bs=512 count=20 >> build/${os_img}
+	dd if=/dev/zero bs=512 count=25 >> build/${os_img}
 
 build/%.bin: ${bootloader_dir}/%.asm
 	nasm -f bin $< -o $@
 
-${kernel_object_file}:
-	nasm -f elf -g ${kernel_asm_file} -o ${kernel_object_file}
+build/kernel/%_asm.o: ${kernel_dir}/%.asm
+	nasm -f elf -g $< -o $@
 
 build/kernel/%.o: ${kernel_dir}/%.c
 	i686-elf-gcc -I${include} ${gcc_flags} -std=gnu99 -c $< -o $@
 
-build/kernel.bin: ${kernel_object_file} ${kernel_c_object_file}
-	i686-elf-ld -g -relocatable ${kernel_object_file} ${kernel_c_object_file} -o build/kernel/kernel_all.o
-	i686-elf-gcc -T ${linker_script} build/kernel/kernel_all.o -o build/kernel.bin ${ld_flags}
+build/lib/%.o: ${lib_dir}/%.c
+	i686-elf-gcc -I${include} ${gcc_flags} -std=gnu99 -c $< -o $@
+
+build/kernel.bin: ${kernel_object_file} ${kernel_c_object_file} ${lib_c_object_file} 
+	i686-elf-ld -g -relocatable ${kernel_object_file} ${kernel_c_object_file} ${lib_c_object_file} \
+				-o build/kernel/kernel_all.o
+	i686-elf-gcc -T ${linker_script} build/kernel/kernel_all.o -o build/kernel.bin ${ld_flags} ${gcc_flags}
 
 mkdir:
 	mkdir build
 	mkdir build/kernel
 	mkdir build/test
+	mkdir build/lib
 
 shell:
 

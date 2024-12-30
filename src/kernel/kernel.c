@@ -1,17 +1,16 @@
 #include "kernel.h"
 #include "print.h"
+#include "idt.h"
+
+extern void problem();
 
 void kernel_main(){
 	screen_clean();	
+	set_color(LightCyan, Black);
 	print_char('H');
 	print_string("hello!\n");
 	print_string("ooo!\n");
-	i8 i = 0;
-	while(1){
-		for(int i=0; i<5000000;i++){
+	idt_init();
 
-		}
-		print_char((i8)i);
-		i ++;
-	}
+	problem();
 }

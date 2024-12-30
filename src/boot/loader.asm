@@ -127,6 +127,7 @@ protected_mode_start:
 	mov ebp, 0x00200000
 	mov esp, ebp
 
+
 	mov byte [0xb8000], 'H'
 	mov eax, 4 ; lba of beginning
 	mov ecx, 20 ; sector count
