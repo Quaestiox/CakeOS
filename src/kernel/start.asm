@@ -1,11 +1,17 @@
 [bits 32]
 global _start
-global problem
-global intret
 extern kernel_main
 
 _start:
 
+	mov al, 00010001b
+	out 0x20, al
+
+	mov al, 0x20
+	out 0x21, al
+
+	mov al, 00000001b
+	out 0x21, al
 
 	mov byte [0xb8004], 'K'
 
@@ -13,11 +19,7 @@ _start:
 
 	mov byte [0xb8006], 'N'
 	jmp $
-
-problem:
-	mov eax, 0
-	div eax
-	ret
+	
 
 
 times 512 - ($ - $$) db 0

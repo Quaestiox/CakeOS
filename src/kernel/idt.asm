@@ -1,8 +1,17 @@
 section .text
 global idt_load
-global idt_zero
+global problem
+
+global int_0
+global int_21
+global int_nothing
+
+
+extern int_0_handler
+extern int_21_handler
+extern int_nothing_handler
+
 idt_load:
-	mov byte [0xb8006], 'I' 
 	push ebp
 	mov ebp, esp
 
@@ -12,5 +21,44 @@ idt_load:
 	pop ebp
 	ret
 
+int_0:
+	cli
+	pushad
+
+	call int_0_handler
+	
+	popad
+	sti
+	iret
+
+
+
+int_21:
+	cli
+	pushad
+
+	call int_21_handler
+	
+	popad
+	sti
+	iret
+
+int_nothing:
+	cli
+	pushad
+
+	call int_nothing_handler
+	
+	popad
+	sti
+	iret
+
+
+problem:
+	mov eax, 1
+	mov ebx, 2
+	div ebx
+	jmp $
+	
 
 message: db "idt!!!!!!!!!!!!!!!!",0

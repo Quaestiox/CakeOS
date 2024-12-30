@@ -2,14 +2,32 @@
 #include "memory.h"
 #include "config.h"
 #include "print.h"
+#include "io.h"
 
-extern void idt_load(void* ptr);
+extern void idt_load(struct idtr_desc* ptr);
+extern void int_0();
+extern void int_21();
+extern void int_nothing();
+
+void int_21_handler(){
+	print_string("Key!!!\n");
+	outb(0x20, 0x20);
+}
+
+
+void int_nothing_handler(){
+	outb(0x20, 0x20);
+}
+
 struct idt_desc idt_descriptor_table[INTERRUPT_COUNT];
 struct idtr_desc idtr_descriptor;
 
 
-void idt_0(){
-	print_string("Divided by zero \n");
+void int_0_handler(){
+	print_string("Divided by zero!\n");
+	while(1){
+
+	}
 }
 
 void idt_set(int interrupt_id, void* address){
@@ -26,9 +44,17 @@ void idt_init(){
 	idtr_descriptor.limit = sizeof(idt_descriptor_table) - 1;
 	idtr_descriptor.base = (u32)idt_descriptor_table;
 
-	idt_set(0, idt_0);
+	for(int i = 0; i < INTERRUPT_COUNT; i++){
+		idt_set(i, int_nothing);
+	}
+
+	idt_set(0, int_0);
+	idt_set(0x21, int_21);
+
+
 	print_string("idt!\n");
-	idt_load((void*)&idtr_descriptor);
+	idt_load(&idtr_descriptor);
+
 	print_string("idt!2\n");
 }
 

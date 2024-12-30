@@ -5,7 +5,7 @@ void* memset(void* dest, int ch, size_t size){
 	for(int i = 0; i < size; i++){
 		ptr[i] = (char)ch;
 	}
-	return ptr;
+	return dest;
 
 }
 

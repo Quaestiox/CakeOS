@@ -17,7 +17,7 @@ void kernel_main(){
 	idt_init();
 
 	print_string("hello\n");
-	
+	problem();
 	print_char('A');
 	while(1){
 	}
