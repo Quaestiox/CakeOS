@@ -14,11 +14,9 @@ void kernel_main(){
 	print_string("ooo!\n");
 
 	print_string("ooo!\n");
+
 	idt_init();
 
 	print_string("hello\n");
-	problem();
 	print_char('A');
-	while(1){
-	}
 }

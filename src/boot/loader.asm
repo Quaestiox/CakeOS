@@ -14,12 +14,6 @@ loader_start:
 
 	; load to gdtr
 	lgdt[gdt_descriptor]
-
-	; enable A20 line
-	in al, 0x92
-	or al, 0b10
-	out 0x92, al
-
 	; enable protected mode
 	mov eax, cr0
 	or eax, 0x1
@@ -95,14 +89,14 @@ gdt_code:
 	dw 0x0  ; base 0-15 bits
 	db 0x0 ; base 16-23 bits
 	db 0x9a ; access byte
-	db 0xCF ; limit 16-19 bits and flags
+	db 11001111b ; limit 16-19 bits and flags
 	db 0x0 ; base 24-31 bits
 gdt_data:
 	dw 0xFFFF ; limit 0-15 bits
 	dw 0x0  ; base 0-15 bits
 	db 0x0 ; base 16-23 bits
 	db 0x92 ; access byte
-	db 0xCF ; limit 16-19 bits and flags
+	db 11001111b; limit 16-19 bits and flags
 	db 0x0 ; base 24-31 bits
 gdt_end:
 
@@ -119,25 +113,15 @@ data_selector equ gdt_data - gdt_start
 [bits 32]
 
 protected_mode_start:
-	mov ax, data_selector
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ss, ax
-	mov ebp, 0x00200000
-	mov esp, ebp
-
-
 	mov byte [0xb8000], 'H'
 	mov eax, 4 ; lba of beginning
-	mov ecx, 20 ; sector count
+	mov ecx, 200 ; sector count
 	mov edi, 0x100000 ; target address
 
 	call read_ata_disk
 
 
-	jmp code_selector:0x100000
+	jmp code_selector:0x0100000
 
 	jmp $
 
@@ -190,5 +174,4 @@ read_ata_disk:
 times 512 - ($ - $$) db 0
 ards_count: dw 0
 ards_buffer:
-
 

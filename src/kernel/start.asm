@@ -1,8 +1,28 @@
+section .text
 [bits 32]
 global _start
 extern kernel_main
 
+code_selector equ 0x08
+data_selector equ 0x10
+
 _start:
+	mov ax, data_selector
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+	mov ebp, 0x0020000
+	mov esp, ebp
+
+	; enable A20 line
+	in al, 0x92
+	or al, 2
+	out 0x92, al
+
+
+
 
 	mov al, 00010001b
 	out 0x20, al
@@ -13,11 +33,10 @@ _start:
 	mov al, 00000001b
 	out 0x21, al
 
-	mov byte [0xb8004], 'K'
+	sti	
 
 	call kernel_main
 
-	mov byte [0xb8006], 'N'
 	jmp $
 	
 

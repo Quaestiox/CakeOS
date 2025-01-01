@@ -1,12 +1,14 @@
 #include "memory.h"
 
-void* memset(void* dest, int ch, size_t size){
-	char* ptr = (char*) dest;
-	for(int i = 0; i < size; i++){
-		ptr[i] = (char)ch;
-	}
-	return dest;
+void* memset(void* ptr,int c, size_t size){
+	char* c_ptr = (char*) ptr;
+	for (int i=0;i < size; i++){
+		c_ptr[i] = (char) c;
 
+	}
+
+	return ptr;
+	
 }
 
 int memcmp(void* s1,void* s2,int count){

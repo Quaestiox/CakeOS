@@ -1,4 +1,4 @@
-section .text
+section .asm
 
 global inb
 global inw
