@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "crt.h"
 #include "io.h"
+#include "kheap.h"
 
 extern void problem();
 
@@ -11,12 +12,10 @@ void kernel_main(){
 	set_color(LightCyan, Black);
 	print_char('H');
 	print_string("hello!\n");
-	print_string("ooo!\n");
-
-	print_string("ooo!\n");
 
 	idt_init();
 
-	print_string("hello\n");
-	print_char('A');
+	kheap_init();
+
+	enable_interrupt();
 }

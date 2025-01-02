@@ -60,20 +60,10 @@ build/lib/%.o: ${lib_dir}/%.c
 	i686-elf-gcc -I${include} ${gcc_flags} -std=gnu99 -c $< -o $@
 
 build/kernel.bin: build/kernel/start_asm.o \
-					build/kernel/kernel.o \
 					build/kernel/idt_asm.o \
-					build/kernel/idt.o \
 					build/kernel/io_asm.o \
-					build/kernel/print.o \
-					${lib_c_object_file} 
-#	i686-elf-ld -g -relocatable build/kernel/start_asm.o \
-#					build/kernel/kernel.o \
-#					build/kernel/idt_asm.o \
-#					build/kernel/idt.o \
-#					build/kernel/io_asm.o \
-#					build/kernel/print.o \
-#				    ${lib_c_object_file} \
-#				-o build/kernel/kernel_all.o*/
+ 					${lib_c_object_file} \
+					${kernel_c_object_file} 
 	i686-elf-gcc -T ${linker_script} $^ -o build/kernel.bin ${gcc_flags}
 
 mkdir:

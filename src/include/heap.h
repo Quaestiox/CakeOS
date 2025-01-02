@@ -16,17 +16,19 @@ typedef u8 heap_table_entry;
 struct heap_table{
 	heap_table_entry* entries;
 	size_t count;
-}
+};
 
 struct heap{
 	struct heap_table* table;
 	void* addr;
-}
+};
+
+
+i32 heap_create(struct heap* heap,void* ptr,struct heap_table* table,void* end);
+void* heap_malloc(struct heap* heap,size_t size);
+void heap_free(struct heap* heap,void* ptr);
 
 
 
-
-
-void heap_init();
 
 #endif

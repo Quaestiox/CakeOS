@@ -33,10 +33,7 @@ void int_nothing_handler(){
 
 
 void int_0_handler(){
-//	if(!zero){
 		print_string("Divided by zero!\n");
-//	zero = 1;
-//	}
 }
 
 void idt_set(int interrupt_id, void* address){
@@ -64,10 +61,8 @@ void idt_init(){
 	idt_set(0x20, int_20h);
 
     
-	print_string("idt!\n");
 	idt_load(&idtr_descriptor);
-
-	print_string("idt!2intintitnintintintintintint!\n");
+	print_string("IDT initialized.\n");
 }
 
 

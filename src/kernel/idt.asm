@@ -6,6 +6,8 @@ global int_0
 global int_21h
 global int_nothing
 global int_20h
+global enable_interrupt
+global disable_interrupt
 
 extern int_0_handler
 extern int_21h_handler
