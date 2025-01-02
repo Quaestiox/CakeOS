@@ -12,5 +12,7 @@ void eprint(i32 code){
 			print_string("heap_table_error\n");
 		case -ERR_NO_MEMORY:
 			print_string("no_memory_error\n");
+		case -ERR_PAGING:
+			print_string("paging_error\n");
 	}
 }

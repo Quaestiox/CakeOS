@@ -62,6 +62,7 @@ build/lib/%.o: ${lib_dir}/%.c
 build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/idt_asm.o \
 					build/kernel/io_asm.o \
+					build/kernel/paging_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} 
 	i686-elf-gcc -T ${linker_script} $^ -o build/kernel.bin ${gcc_flags}

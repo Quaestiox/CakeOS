@@ -4,8 +4,11 @@
 #include "crt.h"
 #include "io.h"
 #include "kheap.h"
+#include "paging.h"
 
 extern void problem();
+
+static struct paging_4gb* kernel_paging = 0;
 
 void kernel_main(){
 	screen_clean();	
@@ -16,6 +19,12 @@ void kernel_main(){
 	idt_init();
 
 	kheap_init();
+
+	kernel_paging = paging_new_4gb(PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
+
+	paging_switch(kernel_paging);
+
+	enable_paging();
 
 	enable_interrupt();
 }
