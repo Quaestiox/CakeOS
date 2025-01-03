@@ -26,10 +26,11 @@ test_exec_file := ${patsubst ${test_dir}/%.c, test_build/%, ${test_src_file}}
 
 
 include ?= ./src/include
-gcc_flags := -g -ffreestanding -falign-jumps -falign-functions -falign-labels        \
-			 -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions \
-			 -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp    \
-			 -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc -Wno-div-by-zero
+gcc_flags ?= -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops \
+			 -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function \
+			 -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib \
+			 -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
+
 
 
 all: mkdir shell ${os_img}
@@ -41,7 +42,7 @@ ${os_img}: ${bootloader_bin_file} ${kernel_bin_file}
 	dd if=build/boot.bin of=build/${os_img} bs=512 count=1
 	dd if=/dev/zero bs=512 count=1 >> build/${os_img}
 	dd if=build/loader.bin bs=512 count=2  conv=sync >> build/${os_img}
-	dd if=build/kernel.bin bs=512 count=30 >> build/${os_img}
+	dd if=build/kernel.bin >> build/${os_img}
 	dd if=/dev/zero bs=512 count=200 >> build/${os_img}
 
 
@@ -65,7 +66,15 @@ build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/paging_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} 
-	i686-elf-gcc -T ${linker_script} $^ -o build/kernel.bin ${gcc_flags}
+	i686-elf-ld -relocatable -g build/kernel/start_asm.o \
+					build/kernel/idt_asm.o \
+					build/kernel/io_asm.o \
+					build/kernel/paging_asm.o \
+ 					${lib_c_object_file} \
+					${kernel_c_object_file} \
+				-o build/kernel_all.o
+ 
+	i686-elf-gcc -T ${linker_script} build/kernel_all.o -o build/kernel.bin ${gcc_flags}
 
 mkdir:
 	mkdir build

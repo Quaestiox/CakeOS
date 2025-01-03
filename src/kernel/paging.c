@@ -1,7 +1,7 @@
 #include "paging.h"
 #include "kheap.h"
 #include "error.h"
-#include <stdbool.h>
+#include "print.h"
 
 extern void paging_load_directory(paging_directory directory);
 static paging_directory current_directory = 0;
@@ -21,6 +21,7 @@ struct paging_4gb* paging_new_4gb(u8 flags){
 
 	struct paging_4gb* new_paging = kzalloc(sizeof(struct paging_4gb));
 	new_paging->directory = directory;
+	print_string("4GB paging implemented.\n");
 	return new_paging;
 }
 
@@ -80,15 +81,35 @@ void* paging_align_to_lower_page(void* addr){
 	return (void*) new_addr;
 }
 
-int paging_map(struct paging_4gb* paging, void* virt, void* phys, int flags){
+
+
+int paging_set_page(paging_directory directory, void *virt, u32 val){
+	if(!paging_is_aligned(virt)){
+		return -ERR_PAGING;
+	}
+
+	u32 directory_index = 0;
+	u32 table_index = 0;
+	int res = paging_get_indexes(virt, &directory_index, &table_index);
+	if(res < 0){
+		return res;
+	}
+	paging_directory_entry entry = directory[directory_index];
+	paging_table table = (paging_table)(entry & 0xfffff000);
+	table[table_index] = val;
+
+	return 0;   
+}
+
+int paging_map(struct paging_4gb* paging, void* virt, void* phys, u8 flags){
 	if(((u32)virt % PAGING_PAGE_SIZE) || ((u32)phys % PAGING_PAGE_SIZE)){
 		return -ERR_PAGING;
 	}
 
-	return paging_set(paging->directory, virt, (u32)phys | flags);
+	return paging_set_page(paging->directory, virt, (u32)phys | flags);
 }
 
-int paging_map_range(struct paging_4gb* paging, void* virt, void* phys,int count,int flags){
+int paging_map_range(struct paging_4gb* paging, void* virt, void* phys,int count,u8 flags){
 	int res = 0;
 	for(int i = 0; i < count;i++){
 		res = paging_map(paging, virt, phys, flags);
@@ -102,7 +123,7 @@ int paging_map_range(struct paging_4gb* paging, void* virt, void* phys,int count
 	return res;
 }
 
-int paging_map_to(struct paging_4gb* paging, void* virt, void* phys, void* phys_end,int flags){
+int paging_map_to(struct paging_4gb* paging, void* virt, void* phys, void* phys_end,u8 flags){
 	int res = 0;
 	if((u32)virt % PAGING_PAGE_SIZE){
 		res = -ERR_PAGING;
@@ -130,25 +151,6 @@ int paging_map_to(struct paging_4gb* paging, void* virt, void* phys, void* phys_
 
 out: 
 	return res;
-}
-
-int paging_set(paging_directory directory, void* virt, u32 val){
-	if(!paging_is_aligned(virt)){
-		return -ERR_PAGING;
-	}
-
-	u32 directory_index = 0;
-	u32 table_index = 0;
-	int res = paging_get_indexes(virt, &directory_index, &table_index);
-	if(res < 0){
-		return res;
-	}
-
-	paging_directory_entry entry = directory[directory_index];
-	paging_table_entry* table = (paging_table_entry*)(entry & 0xfffff000);
-	table[table_index] = val;
-
-	return 0;   
 }
 
 void* paging_get_physical_address(paging_directory directory, void* virt){

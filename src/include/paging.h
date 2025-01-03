@@ -29,11 +29,19 @@ struct paging_4gb* paging_new_4gb(u8 flags);
 void paging_switch(struct paging_4gb* paging);
 void enable_paging();
 paging_directory paging_get_directory(struct paging_4gb* paging);
-
-int paging_map_to(struct paging_4gb* paging, void* virt, void* phys, void* phys_end,int flags);
-int paging_set(paging_directory dircetory, void* virt, u32 val);
 void paging_free(struct paging_4gb* paging);
+
+
+bool paging_is_aligned(void* addr);
+int paging_set_page(paging_directory dircetory, void* virt, u32 val);
+
+void* paging_align_to_lower_page(void* addr);
+int paging_map_to(struct paging_4gb* paging, void* virt, void* phys, void* phys_end,u8 flags);
 u32 paging_get(paging_directory directory, void* virt );
 
+int paging_map(struct paging_4gb* paging, void* virt, void* phys, u8 flags);
 
+int paging_map_range(struct paging_4gb* paging, void* virt, void* phys,int count,u8 flags);
+
+void* paging_get_physical_address(paging_directory directory, void* virt);
 #endif
