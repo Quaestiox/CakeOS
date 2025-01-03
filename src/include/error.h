@@ -8,6 +8,7 @@
 #define ERR_NO_MEMORY 4
 #define ERR_PAGING 5
 #define ERR_DISK 6
+#define ERR_PATH 7
 
 void eprint(i32 code);
 

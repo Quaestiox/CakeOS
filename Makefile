@@ -17,7 +17,9 @@ lib_dir ?= src/lib
 lib_c_file := ${wildcard ${lib_dir}/*.c}
 lib_c_object_file := ${patsubst ${lib_dir}/%.c, build/lib/%.o, ${lib_c_file}}
 
-
+fs_dir ?= src/fs
+fs_c_file := ${wildcard ${fs_dir}/*.c}
+fs_c_object_file := ${patsubst ${fs_dir}/%.c, build/fs/%.o, ${fs_c_file}}
 
 test_dir ?= test
 test_src_file := ${wildcard ${test_dir}/*.c}
@@ -60,18 +62,23 @@ build/kernel/%.o: ${kernel_dir}/%.c
 build/lib/%.o: ${lib_dir}/%.c
 	i686-elf-gcc -I${include} ${gcc_flags} -std=gnu99 -c $< -o $@
 
+build/fs/%.o: ${fs_dir}/%.c
+	i686-elf-gcc -I${include} ${gcc_flags} -std=gnu99 -c $< -o $@
+
 build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/idt_asm.o \
 					build/kernel/io_asm.o \
 					build/kernel/paging_asm.o \
  					${lib_c_object_file} \
-					${kernel_c_object_file} 
+					${kernel_c_object_file} \
+					${fs_c_object_file}
 	i686-elf-ld -relocatable -g build/kernel/start_asm.o \
 					build/kernel/idt_asm.o \
 					build/kernel/io_asm.o \
 					build/kernel/paging_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} \
+					${fs_c_object_file} \
 				-o build/kernel_all.o
  
 	i686-elf-gcc -T ${linker_script} build/kernel_all.o -o build/kernel.bin ${gcc_flags}
@@ -81,6 +88,7 @@ mkdir:
 	mkdir build/kernel
 	mkdir build/test
 	mkdir build/lib
+	mkdir build/fs
 
 shell:
 
