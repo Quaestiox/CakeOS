@@ -21,3 +21,9 @@ void PIC_remap(int offset1, int offset2){
 	outb(PIC1_DATA, a1);   // restore saved masks.
 	outb(PIC2_DATA, a2);
 }
+
+
+void PIC_disable(){
+	outb(PIC1_DATA, 0xff);
+    outb(PIC2_DATA, 0xff);
+}

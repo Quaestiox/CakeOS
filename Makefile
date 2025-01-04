@@ -110,6 +110,6 @@ test_mkdir:
 test_clean: 
 	rm -r test_build
 
-test_build/%: ${test_dir}/%_test.c ${kernel}/%.c
-	gcc -I${include} $^ -o $@
+test_build/%: ${test_dir}/%.c
+	gcc -I${include} $< -o $@
 	./$@
