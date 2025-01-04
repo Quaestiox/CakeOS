@@ -12,5 +12,6 @@
 
 void eprint(i32 code);
 
+void panic(const char* msg);
 
 #endif

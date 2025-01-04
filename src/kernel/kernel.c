@@ -5,7 +5,7 @@
 #include "io.h"
 #include "kheap.h"
 #include "paging.h"
-
+#include "pic.h"
 extern void problem();
 
 static struct paging_4gb* kernel_paging = 0;
@@ -16,6 +16,7 @@ void kernel_main(){
 	print_char('H');
 	print_string("hello!\n");
 
+	PIC_remap(0x20, 0x28);
 	idt_init();
 
 	kheap_init();

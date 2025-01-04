@@ -17,4 +17,7 @@
 #define SECTOR_SIZE 512
 
 #define MAX_PATH 108
+
+
+#define LOGIC_PARTITION_COUNT 8
 #endif 

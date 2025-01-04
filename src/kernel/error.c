@@ -16,3 +16,9 @@ void eprint(i32 code){
 			print_string("paging_error\n");
 	}
 }
+
+
+void panic(const char* msg){
+	print_string("panic!");
+	while(1){}
+}
