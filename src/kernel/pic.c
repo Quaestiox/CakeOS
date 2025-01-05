@@ -1,5 +1,7 @@
 #include "pic.h"
 #include "io.h"
+#include "print.h"
+
 
 void PIC_remap(int offset1, int offset2){
 	u8 a1, a2;
@@ -20,10 +22,43 @@ void PIC_remap(int offset1, int offset2){
 
 	outb(PIC1_DATA, a1);   // restore saved masks.
 	outb(PIC2_DATA, a2);
+
+	print_string("PIC remap done.\n");
 }
 
 
 void PIC_disable(){
 	outb(PIC1_DATA, 0xff);
     outb(PIC2_DATA, 0xff);
+
+	print_string("PIC disable done.\n");
 }
+
+void IRQ_set_mask(u8 irq){
+	u16 port;
+	u8 value;
+
+	if(irq < 8){
+		port = PIC1_DATA;
+	} else{
+		port = PIC2_DATA;
+		irq -= 8;
+	}
+	value = inb(port) | (1 << irq);
+	outb(port, value);
+}
+
+void IRQ_clear_mask(u8 irq){
+	u16 port;
+	u8 value;
+
+	if(irq < 8){
+		port = PIC1_DATA;
+	} else{
+		port = PIC2_DATA;
+		irq -= 8;
+	}
+	value = inb(port) & ~(1 << irq);
+	outb(port, value);
+}
+

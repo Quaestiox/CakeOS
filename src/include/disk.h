@@ -24,7 +24,22 @@ enum {
 	ATA_COMMAND,
 };
 
+enum{
+	ATA_EXSTAT_DEVICE = ATA_MASTER_CT_BASE,
+	ATA_DRIVE_ADDR,
+};
 
+#define STAT_ERR	0b00000001
+#define STAT_IDX	0b00000010
+#define STAT_CORR	0b00000100
+#define STAT_READY	0b00001000
+#define STAT_SRV	0b00010000
+#define STAT_DF		0b00100000
+#define STAT_RDY	0b01000000
+#define STAT_BSY	0b10000000
+
+#define ATA_READ	0x20
+#define ATA_WRITE	0x30
 
 struct partition{
 	u32 start_lba;

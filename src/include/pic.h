@@ -31,7 +31,12 @@
 #define OCW2_SL			0b01000000
 #define OCW2_EOI		0b00100000
 
-
+#define OCW3_ESMM		0b01000000
+#define OCW3_SMM		0b00100000
+#define OCW3_INIT		0b00001000
+#define OCW3_POLL		0b00000100
+#define OCW3_READ_IRR	0b00000010
+#define OCW3_READ_ISR	0b00000011
 
 #define PIC_EOI OCW2_EOI
 /*	
@@ -47,8 +52,16 @@
 	********************
 */
 
+#define IRQ_CLOCK		0
+#define IRQ_KEYBOARD	1
+
+
 void PIC_remap(int offset1, int offset2);
 
 void PIC_disable();
+
+void IRQ_set_mask(u8 irq);
+
+void IRQ_clear_mask(u8 irq);
 
 #endif
