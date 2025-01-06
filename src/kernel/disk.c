@@ -1,32 +1,24 @@
 #include "disk.h"
-#include "io.h"
+#include "bda.h"
+#include "print.h"
 
-int ata_read_sector(int lba, int count, void* buffer){
-	
-	outb(ATA_MASTER_IO_BASE, count);
-	outb(ATA_LBA_LOW, (u8)(lba & 0xff));
-	outb(ATA_LBA_MID, (u8)lba >> 8);
-	outb(ATA_LBA_HI, (u8)(lba >> 16));
-	outb(ATA_DRIVE_HEAD, 0xE0);
-	outb(ATA_COMMAND, ATA_READ);
-	
-	u16* ptr = (u16*)buffer;
-
-	for(int b = 0; b < count; b++){
-		char c = inb(ATA_COMMAND);
-		// wait for ready
-		while(!(c & STAT_READY)){
-			c = inb(ATA_COMMAND);
-		}
-
-		for(int i = 0; i < 256; i++){
-			*ptr = inw(ATA_DATA);
-			ptr++;
-		}
-		
-	}
-
-	return 0;
+bool valid_disk_count(){
+	return hard_disk_count() > 0;
 }
 
+void disk_init(){
+	if(!valid_disk_count()){
+		print_string("No hard disk!");
+		return;
+	}
 
+	print_string("Disk init done.");
+
+
+
+	
+}
+
+u8 hard_disk_count(){
+	return *((u8*)HARD_DISK_DRIVE_DETECT);
+}

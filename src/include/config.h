@@ -18,6 +18,7 @@
 
 #define MAX_PATH 108
 
+#define GDT_SEGMENT_COUNT 6
 
 #define LOGIC_PARTITION_COUNT 8
 #endif 
