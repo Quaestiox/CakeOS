@@ -9,10 +9,27 @@
 #include "disk.h"
 #include "ata.h"
 #include "gdt.h"
+#include "tss.h"
+#include "thread.h"
 
 extern void problem();
 
 static struct paging_4gb* kernel_paging = 0;
+
+
+void p1(){
+	print_string("p1:aaaa\n");
+}
+void p2(){
+	print_string("p2:bbbbb\n");
+}
+void p3(void* arg){
+	char* str = arg;
+	while(1){
+
+	print_string(str);
+	}
+}
 
 void kernel_main(){
 	screen_clean();	
@@ -38,6 +55,18 @@ void kernel_main(){
 
 	disk_init();
 	enable_interrupt();
-	while(1){}
+
+
+	thread_start(p3, "p3:ccccc", "p3", 1);
+//	thread_create(p2);
+
+	
+//	scheduler();
+
+	print_string("aaa");
+	while(1){
+	}
 	
 }
+
+

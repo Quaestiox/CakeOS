@@ -70,6 +70,7 @@ build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/io_asm.o \
 					build/kernel/paging_asm.o \
 					build/kernel/gdt_asm.o \
+					build/kernel/tss_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} \
 					${fs_c_object_file}
@@ -78,6 +79,7 @@ build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/io_asm.o \
 					build/kernel/paging_asm.o \
 					build/kernel/gdt_asm.o \
+					build/kernel/tss_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} \
 					${fs_c_object_file} \

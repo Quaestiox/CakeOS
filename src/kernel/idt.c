@@ -3,11 +3,13 @@
 #include "config.h"
 #include "print.h"
 #include "io.h"
+#include "thread.h"
 
 struct idt_desc idt_descriptor_table[INTERRUPT_COUNT];
 struct idtr_desc idtr_descriptor;
 
 volatile int zero = 0;
+u32 ticks;
 
 extern void idt_load(void* ptr);
 extern void int_0();
@@ -22,7 +24,22 @@ void int_21h_handler(){
 
 
 void int_20h_handler(){
-	print_char('.');
+	
+	struct task_struct* current_thread = running_thread();
+
+	if(current_thread->stack_magic != STACK_MAGIC){
+		print_string("stack overflow!");
+	}
+	current_thread->run_clock++;
+	ticks++;
+
+	if (current_thread->clock == 0){
+		schedule();
+	} else{
+		current_thread->clock--;
+	}
+
+
 	outb(0x20, 0x20);
 }
 void int_nothing_handler(){
