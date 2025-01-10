@@ -24,12 +24,13 @@ void int_21h_handler(){
 
 
 void int_20h_handler(){
-	
-	struct task_struct* current_thread = running_thread();
-
+//	print_char('.');	
+	schedule();
+/*
 	if(current_thread->stack_magic != STACK_MAGIC){
 		print_string("stack overflow!");
 	}
+
 	current_thread->run_clock++;
 	ticks++;
 
@@ -39,7 +40,7 @@ void int_20h_handler(){
 		current_thread->clock--;
 	}
 
-
+*/
 	outb(0x20, 0x20);
 }
 void int_nothing_handler(){

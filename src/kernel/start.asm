@@ -13,7 +13,7 @@ _start:
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
-	mov ebp, 0x0020000
+	mov ebp, 0x0010000
 	mov esp, ebp
 
 	; enable A20 line

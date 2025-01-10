@@ -23,7 +23,7 @@ void link_list_push(struct link_list* list, struct link_list_node* node){
 	link_list_insert_bf(list->head.next, node);
 }
 
-void list_append(struct link_list* list, struct link_list_node* node){
+void link_list_append(struct link_list* list, struct link_list_node* node){
 	link_list_insert_bf(&list->tail, node);
 }
 

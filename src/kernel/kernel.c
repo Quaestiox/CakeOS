@@ -17,12 +17,6 @@ extern void problem();
 static struct paging_4gb* kernel_paging = 0;
 
 
-void p1(){
-	print_string("p1:aaaa\n");
-}
-void p2(){
-	print_string("p2:bbbbb\n");
-}
 void p3(void* arg){
 	char* str = arg;
 	while(1){
@@ -30,6 +24,17 @@ void p3(void* arg){
 	print_string(str);
 	}
 }
+
+
+void p2(void* arg){
+	char* str = arg;
+	while(1){
+
+	print_string(str);
+	}
+}
+
+
 
 void kernel_main(){
 	screen_clean();	
@@ -54,14 +59,16 @@ void kernel_main(){
 
 
 	disk_init();
+
+//	print_string("kernel thread start\n");
+//	thread_start(p3, "p3:ccc", "p3", 31);
+//	thread_start(p2, "p2:aaa", "p2", 8);
+
+	task_init();
+
 	enable_interrupt();
 
 
-	thread_start(p3, "p3:ccccc", "p3", 1);
-//	thread_create(p2);
-
-	
-//	scheduler();
 
 	print_string("aaa");
 	while(1){
