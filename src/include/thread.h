@@ -58,20 +58,20 @@ struct task_struct{
 	enum task_status status;
 	char name[16];
 	u32 id;
-//	u8 priority;
+	u8 priority;
 
-//	u8 clock;
-//	u8 run_clock;
+	u8 clock;
+	u8 run_clock;
 //	struct link_list_node ready_node;
 //	struct link_list_node all_node;
 //	u32* dictionary;
-//	u32 stack_magic;
+	u32 magic;
 };
 
 
 //struct task_struct* thread_start(thread_func function, void* func_arg, char* name, int prior);
 void schedule();
-struct task_struct* running_thread();
+struct task_struct* running_task();
 
 void task_init();
 

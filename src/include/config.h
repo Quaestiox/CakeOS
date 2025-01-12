@@ -25,7 +25,7 @@
 
 #define LOGIC_PARTITION_COUNT 8
 
-#define MAX_THREAD 1024
+#define MAX_THREAD 8
 
 #define STACK_MAGIC 0x14159265
 #endif 

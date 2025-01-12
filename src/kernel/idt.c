@@ -28,7 +28,16 @@ void int_21h_handler(){
 
 void int_20h_handler(){
 //	print_char('.');	
-	schedule();
+
+	struct task_struct* current = running_task();
+	current->clock -= 1;
+	current->run_clock += 1;
+	if(!current->clock){
+		current->clock = current->priority;
+		schedule();
+	}
+
+	
 /*
 	if(current_thread->stack_magic != STACK_MAGIC){
 		print_string("stack overflow!");
