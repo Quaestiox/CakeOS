@@ -74,5 +74,4 @@ void schedule();
 struct task_struct* running_task();
 
 void task_init();
-
 #endif

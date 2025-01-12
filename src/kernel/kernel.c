@@ -65,7 +65,6 @@ void kernel_main(){
 //	thread_start(p2, "p2:aaa", "p2", 8);
 
 	task_init();
-
 	enable_interrupt();
 
 

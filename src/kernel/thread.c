@@ -20,16 +20,27 @@ struct task_struct* running_task(){
 }
 
 
+static struct task_struct* get_free_task(){
+	for(int i = 0; i < MAX_THREAD; i++){
+		if(thread_list[i] == NULL){
+			thread_list[i] = (struct task_struct*) kzalloc(PAGE_SIZE);
+			return thread_list[i];
+		}
 
-void task_create(struct task_struct* task, thread_func function, char* name, u32 id, u8 prior){
-	task = kzalloc(PAGE_SIZE);
+	}
+	print_string("no more free task");
+	return NULL;
+}
+
+void task_create(thread_func function, char* name, u32 id, u8 prior){
+	struct task_struct* task = get_free_task();
 	u32 stack = (u32)task + PAGE_SIZE;
 	stack -= sizeof(struct task_stack_frame);
 	struct task_stack_frame* frame = (struct task_stack_frame*) stack;
 	frame->ebp = frame->ebx = frame->edi = frame->esi = 0;
 	frame->eip = (void *)function;
 	strcpy(task->name,name);
-	task->status = TASK_RUNNING;
+	task->status = TASK_READY;
 	task->id = id;
 	task->priority = prior;
 	task->clock = prior;
@@ -63,6 +74,7 @@ struct task_struct* task_search(enum task_status status){
 
 void schedule(){
 
+	print_string("schedule!\n");
 	struct task_struct* current = running_task();
 	struct task_struct* next = task_search(TASK_READY);
 
@@ -75,9 +87,6 @@ void schedule(){
 		return;
 	}
 
-	if(next == current){
-		return;
-	}
 
 	if(current->status == TASK_RUNNING){
 		current->status = TASK_READY;
@@ -85,24 +94,31 @@ void schedule(){
 	next->status = TASK_RUNNING;
 
 	switch_to(current,next);
+
 }
 
 void thread_1(void* arg){
+	set_interrupt_state(true);
+//	while(1){
+
 	while(1){
 
-	print_char('1');
-	schedule();
-	}	
+		print_char('1');
+	}
+//	}	
 
 	
 }
 
 void thread_2(void* arg){
+	set_interrupt_state(true);
+//	while(1){
+
 	while(1){
 
-	print_char('2');
-	schedule();
+		print_char('2');
 	}
+//	}
 }
 
 
@@ -111,9 +127,10 @@ void task_init(){
 	main->status = TASK_RUNNING;
 	main->magic = STACK_MAGIC;
 	main->clock = 1;
+	main->priority = 1;
 
 	memset(thread_list, 0, sizeof(thread_list));
 
-	task_create(test1, thread_1, "1", 1, 10);
-	task_create(test2, thread_2, "2", 2, 15);
+	task_create(thread_1, "1", 1, 10);
+	task_create(thread_2, "2", 2, 15);
 }

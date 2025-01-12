@@ -20,6 +20,26 @@ extern void int_nothing();
 void* handler_table[INTERRUPT_COUNT];
 extern void* handler_entry_table[INTERRUPT_COUNT]; 
 
+
+bool get_interrupt_state(){
+	bool res;
+	asm volatile(
+		"pushfl\n"
+		"popl %%eax\n"
+		"shrl $9, %%eax\n"
+		"andl $1, %%eax\n"
+	: "=a"(res));
+	return res;
+}
+
+void set_interrupt_state(bool state){
+	if(state)
+		asm volatile("sti\n");
+	else
+		asm volatile("cli\n");
+}
+
+
 void int_21h_handler(){
 	print_string("Key!!!\n");
 	outb(0x20, 0x20);
@@ -27,40 +47,35 @@ void int_21h_handler(){
 
 
 void int_20h_handler(){
-//	print_char('.');	
+	outb(0x20, 0x20);
 
 	struct task_struct* current = running_task();
-	current->clock -= 1;
-	current->run_clock += 1;
-	if(!current->clock){
+	if(current->magic != STACK_MAGIC){
+		print_string("stack overflow!");
+	}
+
+
+	current->clock --;
+	current->run_clock ++;
+	if(current->clock <= 0){
 		current->clock = current->priority;
 		schedule();
 	}
 
-	
-/*
-	if(current_thread->stack_magic != STACK_MAGIC){
-		print_string("stack overflow!");
-	}
-
-	current_thread->run_clock++;
-	ticks++;
-
-	if (current_thread->clock == 0){
-		schedule();
-	} else{
-		current_thread->clock--;
-	}
-
-*/
-	outb(0x20, 0x20);
+//	outb(0x20, 0x20);
 }
+
 void default_handler(){
 	outb(0x20, 0x20);
 }
 
 
-
+void init_timer(unsigned int frequency) {
+    unsigned int divisor = 1193180 / frequency;
+    outb(0x43, 0x36);               // 设置模式
+    outb(0x40, divisor & 0xFF);     // 低字节
+    outb(0x40, (divisor >> 8) & 0xFF); // 高字节
+}
 
 void int_0_handler(){
 		print_string("Divided by zero!\n");

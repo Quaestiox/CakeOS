@@ -3,7 +3,7 @@ section .asm
 global switch_to
 
 switch_to:
-	
+
 	push ebp
 	mov ebp, esp
 	push esi
@@ -23,7 +23,6 @@ switch_to:
 	pop esi
 	pop ebp
 
-	
 	
 	ret
 

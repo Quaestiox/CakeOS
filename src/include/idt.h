@@ -65,4 +65,9 @@ void idt_init();
 void enable_interrupt();
 void disable_interrupt();
 
+bool interrupt_disable();
+bool get_interrupt_state();
+void set_interrupt_state(bool state);
+
+void init_timer(unsigned int frequency);
 #endif
