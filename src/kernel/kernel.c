@@ -11,6 +11,7 @@
 #include "gdt.h"
 #include "tss.h"
 #include "thread.h"
+#include "keyboard.h"
 
 extern void problem();
 
@@ -57,6 +58,7 @@ void kernel_main(){
 
 	enable_paging();
 
+	keyboard_init();
 
 	disk_init();
 

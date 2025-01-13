@@ -2,6 +2,7 @@
 #include "type.h"
 #include "crt.h"
 #include "io.h"
+#include "idt.h"
 
 struct ScreenChar* buffer = (struct ScreenChar*)0xb8000;
 i32 row_pos = 0;
@@ -72,6 +73,7 @@ void print_char(char c){
 		col_pos ++;
 	}
 	set_cursor();
+
 }
 
 void print_string(char* str){

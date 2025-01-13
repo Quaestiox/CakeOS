@@ -4,6 +4,7 @@
 #include "print.h"
 #include "io.h"
 #include "thread.h"
+#include "keyboard.h"
 
 struct idt_desc idt[INTERRUPT_COUNT];
 struct idtr_desc idtr_descriptor;
@@ -41,7 +42,7 @@ void set_interrupt_state(bool state){
 
 
 void int_21h_handler(){
-	print_string("Key!!!\n");
+	keyboard_handler();
 	outb(0x20, 0x20);
 }
 

@@ -11,7 +11,7 @@ extern void switch_to(struct task_struct* cur, struct task_struct* next);
 
 struct task_struct* thread_list[MAX_THREAD];
 
-
+struct task_struct* idle;
 
 struct task_struct* running_task(){
 	u32 esp;
@@ -32,7 +32,7 @@ static struct task_struct* get_free_task(){
 	return NULL;
 }
 
-void task_create(thread_func function, char* name, u32 id, u8 prior){
+struct task_struct* task_create(thread_func function, char* name, u32 id, u8 prior){
 	struct task_struct* task = get_free_task();
 	u32 stack = (u32)task + PAGE_SIZE;
 	stack -= sizeof(struct task_stack_frame);
@@ -51,6 +51,7 @@ void task_create(thread_func function, char* name, u32 id, u8 prior){
 	task->stack = (u32*)stack;
 
 	print_string("task_create done!\n");
+	return task;
 }
 
 struct task_struct* task_search(enum task_status status){
@@ -67,6 +68,11 @@ struct task_struct* task_search(enum task_status status){
 			task = ptr;
 	}	
 
+
+	if(task == NULL && status == TASK_READY){
+		task = idle;
+	}
+
 	return task;	
 
 }
@@ -74,7 +80,6 @@ struct task_struct* task_search(enum task_status status){
 
 void schedule(){
 
-	print_string("schedule!\n");
 	struct task_struct* current = running_task();
 	struct task_struct* next = task_search(TASK_READY);
 
@@ -121,6 +126,23 @@ void thread_2(void* arg){
 //	}
 }
 
+void first_thread(void* arg){
+	
+	enable_interrupt();
+	print_string("aaaa");
+	while(1){
+
+	}
+}
+
+void idle_thread(void* arg){
+	enable_interrupt();
+
+	print_string("enter the idle thread");
+	while(1){
+
+	}
+}
 
 void task_init(){
 	struct task_struct* main = running_task();
@@ -131,6 +153,7 @@ void task_init(){
 
 	memset(thread_list, 0, sizeof(thread_list));
 
-	task_create(thread_1, "1", 1, 10);
-	task_create(thread_2, "2", 2, 15);
+	idle = task_create(idle_thread, "idle", 1, 1);
+
+	task_create(first_thread, "first", 1, 10);
 }
