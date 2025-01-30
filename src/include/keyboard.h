@@ -21,4 +21,5 @@
 
 void keyboard_handler();
 void keyboard_init();
+char get_last_key();
 #endif 

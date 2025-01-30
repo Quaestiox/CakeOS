@@ -5,9 +5,13 @@
 #include "io.h"
 #include "thread.h"
 #include "keyboard.h"
+#include "error.h"
+
 
 struct idt_desc idt[INTERRUPT_COUNT];
 struct idtr_desc idtr_descriptor;
+
+static system_command syscmd_list[MAX_COMMAND];
 
 volatile int zero = 0;
 u32 ticks;
@@ -17,6 +21,7 @@ extern void int_0();
 extern void int_21h();
 extern void int_20h();
 extern void int_nothing();
+extern void int_80h();
 
 void* handler_table[INTERRUPT_COUNT];
 extern void* handler_entry_table[INTERRUPT_COUNT]; 
@@ -105,10 +110,52 @@ void idt_init(){
 	idt_set(0x00, (void*)int_0);
 	idt_set(0x21, (void*)int_21h);
 	idt_set(0x20, int_20h);
+	idt_set(0x80, int_80h);
     
 	idt_load(&idtr_descriptor);
 	print_string("IDT initialized.\n");
 }
 
 
+void register_command(int id, system_command cmd_func){
+	if(id < 0 || id >= MAX_COMMAND){
+		panic("The command is out of bounds\n");
+	}
 
+	if(syscmd_list[id]){
+		panic("This command id is already existed\n");
+	}
+
+	syscmd_list[id] = cmd_func;
+}
+
+void* handle_command(int command){
+	void* res = 0;
+
+	if (command < 0 || command >= MAX_COMMAND){
+
+		print_string("This command is out of bounds.\n");
+		return 0;
+	}
+
+	system_command cmd_func = syscmd_list[command];
+	if (!cmd_func){
+		print_string("This command is not existed.\n");
+		return 0;
+	}
+
+	res = cmd_func();
+	return res;
+
+}
+
+void* int_80h_handler(int command){
+	void* res = 0;
+
+	print_string("handler command:");
+	print_number(command);
+	print_string("\n");
+	res = handle_command(command);
+
+	return res;
+}

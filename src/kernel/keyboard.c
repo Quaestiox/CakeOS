@@ -3,7 +3,7 @@
 #include "print.h"
 
 static bool caps_status, shift_status, ext_scancode;
-
+static char last_key;
 
 static char keymap[][4] = {
     /* 扫描码 未与 shift 组合  与 shift 组合 以及相关状态 */
@@ -147,6 +147,7 @@ void keyboard_handler(){
 		u8 index = (scancode &= 0x00ff);
 
 		char character = keymap[index][shift];
+		last_key = character;
 		if(character){
 			print_char(character);
 			return;
@@ -170,4 +171,10 @@ void keyboard_init(){
 	caps_status = shift_status = ext_scancode = false;
 
 	print_string("Keyboard init done.\n");
+}
+
+char get_last_key(){
+	char res = last_key;
+	last_key = '0';
+	return res;
 }

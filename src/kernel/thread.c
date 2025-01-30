@@ -5,9 +5,11 @@
 #include "config.h"
 #include "string.h"
 #include "idt.h"
-
+#include "shell.h"
 
 extern void switch_to(struct task_struct* cur, struct task_struct* next);
+
+extern void program1();
 
 struct task_struct* thread_list[MAX_THREAD];
 
@@ -117,6 +119,7 @@ void thread_2(void* arg){
 
 	enable_interrupt();
 	print_string("enter the second thread\n");
+
 	while(1){
 	}
 }
@@ -125,14 +128,13 @@ void first_thread(void* arg){
 	
 	enable_interrupt();
 	print_string("first thread\n");
-	while(1){
-	}
+	program1();
+	shell_start();
 }
 
 void idle_thread(void* arg){
 	enable_interrupt();
 
-	print_string("enter the idle thread\n");
 	while(1){
 
 	}
@@ -148,7 +150,8 @@ void task_init(){
 	memset(thread_list, 0, sizeof(thread_list));
 
 	idle = task_create(idle_thread, "idle", 1, 1);
-
+//	task_create(shell_start, "shell", 3, 10);
 	task_create(first_thread, "first", 1, 10);
-	task_create(thread_2, "second", 2, 10);
+//	task_create(thread_2, "second", 2, 10);
 }
+

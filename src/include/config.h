@@ -31,5 +31,5 @@
 
 #define MILK_PARTITION 200
 
-
+#define MAX_COMMAND 128
 #endif 

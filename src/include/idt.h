@@ -46,6 +46,7 @@
 #define IRQ_MASTER_NR 0x20 // 主片起始向量号
 #define IRQ_SLAVE_NR 0x28  // 从片起始向量号
 
+typedef void*(*system_command)();
 
 struct idt_desc{
 	u16 offset_low; // offset 0-15 bits 
@@ -70,4 +71,5 @@ bool get_interrupt_state();
 void set_interrupt_state(bool state);
 
 void init_timer(unsigned int frequency);
+void register_command(int id, system_command cmd_func);
 #endif

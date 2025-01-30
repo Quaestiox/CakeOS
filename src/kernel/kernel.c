@@ -13,6 +13,7 @@
 #include "thread.h"
 #include "keyboard.h"
 #include "vfs.h"
+#include "syscmd.h" 
 
 extern void problem();
 
@@ -68,13 +69,13 @@ void kernel_main(){
 
 	disk_init();
 	init_file_system();
+	init_syscmd();
 //	print_string("kernel thread start\n");
 //	thread_start(p3, "p3:ccc", "p3", 31);
 //	thread_start(p2, "p2:aaa", "p2", 8);
 
 	task_init();
-
-
+	
 	enable_interrupt();
 
 

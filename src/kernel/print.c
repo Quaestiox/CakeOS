@@ -110,10 +110,14 @@ void print_number(int num){
 }
 
 
+void reset_pos(){
+	col_pos = 0;
+	row_pos = 0;
+}
 void screen_clean(){
 	for(i32 row = 0; row < VGA_HEIGHT; row ++){
 		clean_row(row);
 	}
+	reset_pos();
 }
-
 

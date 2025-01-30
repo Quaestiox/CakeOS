@@ -7,13 +7,14 @@ global int_21h
 global int_20h
 global enable_interrupt
 global disable_interrupt
+global int_80h
 
 extern int_0_handler
 extern int_21h_handler
 extern int_20h_handler
 extern interrupt_handler
 extern handler_table
-
+extern int_80h_handler
 
 idt_load:
 	push ebp
@@ -55,7 +56,24 @@ int_21h:
 	sti
 	iret
 
+int_80h:
+	cli
+	pushad 
 
+	push esp
+	push eax
+	call int_80h_handler
+	mov dword[tmp_res], eax
+
+	add esp, 8
+	popad
+
+	mov eax, [tmp_res]
+
+	iretd
+
+section .data
+tmp_res: dd 0
 
 %macro INTERRUPT_HANDLER 2
 interrupt_handler_%1:
