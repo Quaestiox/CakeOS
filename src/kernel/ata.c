@@ -1,8 +1,10 @@
 #include "ata.h"
 #include "io.h"
+#include "idt.h"
+#include "print.h"
 
 int ata_read_sector(int lba, int count, void* buffer){
-	
+
 	outb(ATA_MASTER_IO_BASE, count);
 	outb(ATA_LBA_LOW, (u8)(lba & 0xff));
 	outb(ATA_LBA_MID, (u8)lba >> 8);
@@ -26,7 +28,8 @@ int ata_read_sector(int lba, int count, void* buffer){
 		
 	}
 
+
+	print_string("ata read done.\n");
+
 	return 0;
 }
-
-

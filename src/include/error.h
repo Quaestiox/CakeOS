@@ -10,6 +10,9 @@
 #define ERR_DISK 6
 #define ERR_PATH 7
 
+#define ERR_FS_STAT 100
+#define ERR_FS_READ 101
+
 void eprint(i32 code);
 
 void panic(const char* msg);

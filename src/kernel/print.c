@@ -3,6 +3,7 @@
 #include "crt.h"
 #include "io.h"
 #include "idt.h"
+#include "string.h"
 
 struct ScreenChar* buffer = (struct ScreenChar*)0xb8000;
 i32 row_pos = 0;
@@ -10,15 +11,16 @@ i32 col_pos = 0;
 ColorCode color = White | (Black << 4);
 
 
+static struct ScreenChar empty = (struct ScreenChar){
+	character: ' ',
+	color: White,
+};
+
 void set_color(u8 fore, u8 back){
 	color = fore | (back << 4);
 }
 
 void clean_row(i32 row){
-	struct ScreenChar empty = (struct ScreenChar){
-		character: ' ',
-		color: color,			
-	};
 	for (i32 i = 0; i < VGA_WIDTH; i++){
 		buffer[i + VGA_WIDTH * row] = empty;
 	}
@@ -59,9 +61,20 @@ void set_cursor(){
 	
 }
 
+
+void backspace(){
+	if(col_pos > 0){
+		buffer[col_pos + VGA_WIDTH * row_pos - 1] = empty;
+		col_pos--;
+
+	}
+}
+
 void print_char(char c){
 	if(c == '\n'){
 		new_line();
+	}else if(c == 0x08){
+		backspace();
 	}else if(col_pos >= VGA_WIDTH){
 		new_line();
 	}else{
@@ -87,6 +100,15 @@ void print_string(char* str){
 		print_char(c);
 	}
 }
+
+void print_number(int num){
+	char* str = "";
+
+	int2str(str, num);
+	print_string(str);
+
+}
+
 
 void screen_clean(){
 	for(i32 row = 0; row < VGA_HEIGHT; row ++){

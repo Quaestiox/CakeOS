@@ -55,6 +55,7 @@
 #define IRQ_CLOCK		0
 #define IRQ_KEYBOARD	1
 
+#define IRQ_DISK		14
 
 void PIC_remap(int offset1, int offset2);
 

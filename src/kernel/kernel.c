@@ -12,6 +12,7 @@
 #include "tss.h"
 #include "thread.h"
 #include "keyboard.h"
+#include "vfs.h"
 
 extern void problem();
 
@@ -43,11 +44,15 @@ void kernel_main(){
 
 	set_color(LightCyan, Black);
 	print_char('H');
+
+	print_number(254);
 	print_string("hello!\n");
 
 	PIC_remap(0x20, 0x28);
 	
 	gdt_init();
+
+
 	idt_init();
 
 	kheap_init();
@@ -58,15 +63,18 @@ void kernel_main(){
 
 	enable_paging();
 
+
 	keyboard_init();
 
 	disk_init();
-
+	init_file_system();
 //	print_string("kernel thread start\n");
 //	thread_start(p3, "p3:ccc", "p3", 31);
 //	thread_start(p2, "p2:aaa", "p2", 8);
 
 	task_init();
+
+
 	enable_interrupt();
 
 

@@ -45,4 +45,5 @@ enum{
 
 int ata_read_sector(int lba, int count, void* buffer);
 
+int disk_read_sector2(int lba,int total, void* buf);
 #endif

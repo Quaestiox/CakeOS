@@ -4,6 +4,8 @@
 #include "type.h"
 #include "config.h"
 
+extern void read_disk(void* buffer, u32 lba, u8 sector_count);
+
 struct partition{
 	u32 start_lba;
 	u32 sector_count;
@@ -45,4 +47,7 @@ void disk_init();
 
 u8 hard_disk_count();
 
+void read_hard_disk(char* buffer, u32 start, u32 length);
+
+static void read_sector(char* buffer, u32 sector);
 #endif

@@ -104,41 +104,35 @@ void schedule(){
 
 void thread_1(void* arg){
 	set_interrupt_state(true);
-//	while(1){
 
 	while(1){
 
 		print_char('1');
 	}
-//	}	
 
 	
 }
 
 void thread_2(void* arg){
-	set_interrupt_state(true);
-//	while(1){
 
+	enable_interrupt();
+	print_string("enter the second thread\n");
 	while(1){
-
-		print_char('2');
 	}
-//	}
 }
 
 void first_thread(void* arg){
 	
 	enable_interrupt();
-	print_string("aaaa");
+	print_string("first thread\n");
 	while(1){
-
 	}
 }
 
 void idle_thread(void* arg){
 	enable_interrupt();
 
-	print_string("enter the idle thread");
+	print_string("enter the idle thread\n");
 	while(1){
 
 	}
@@ -156,4 +150,5 @@ void task_init(){
 	idle = task_create(idle_thread, "idle", 1, 1);
 
 	task_create(first_thread, "first", 1, 10);
+	task_create(thread_2, "second", 2, 10);
 }

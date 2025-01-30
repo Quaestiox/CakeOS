@@ -13,5 +13,6 @@ void print_string(char* str);
 
 void screen_clean();
 
+void print_number(int num);
 
 #endif

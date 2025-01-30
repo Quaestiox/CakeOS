@@ -53,6 +53,21 @@ int istrncmp(const char* str1, const char* str2, int n){
 	return 0;
 }
 
+int strcmp(const char* str1,const char* str2) {
+  int i = 0;
+  char c;
+  while ((c = str1[i]) != '\0') {
+    char c2 = str2[i];
+    if (c2 == '\0') {
+      return 1;
+    }
+    if (c != c2) {
+      return c < c2 ? -1 : 1;
+    }
+    i++;
+  }
+  return str2[i] == '\0' ? 0 : 1;
+}
 
 
 int strncmp(const char* str1, const char* str2, int n){
@@ -103,3 +118,24 @@ bool isdigit(char c){
 int tonumericdigit(char c){
 	return c - 48;
 }
+
+int int2str(char* dst, int num) {
+  u32 start = 0;
+  if (num < 0 ) {
+    dst[start++] = '-';
+    num = -num;
+  }
+
+  char buf[16];
+  buf[15] = '\0';
+  u32 i = 14;
+  while (num > 0) {
+    u32 remain = num % 10;
+    buf[i--] = '0' + remain;
+    num = num / 10;
+  }
+
+  strcpy(dst + start, buf + i + 1);
+  return start + 14 - i;
+}
+

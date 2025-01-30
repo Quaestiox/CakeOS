@@ -28,4 +28,8 @@
 #define MAX_THREAD 8
 
 #define STACK_MAGIC 0x14159265
+
+#define MILK_PARTITION 200
+
+
 #endif 

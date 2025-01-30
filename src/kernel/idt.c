@@ -62,12 +62,12 @@ void int_20h_handler(){
 		current->clock = current->priority;
 		schedule();
 	}
-
-//	outb(0x20, 0x20);
+	enable_interrupt();
 }
 
 void default_handler(){
 	outb(0x20, 0x20);
+	enable_interrupt();
 }
 
 
@@ -105,7 +105,6 @@ void idt_init(){
 	idt_set(0x00, (void*)int_0);
 	idt_set(0x21, (void*)int_21h);
 	idt_set(0x20, int_20h);
-
     
 	idt_load(&idtr_descriptor);
 	print_string("IDT initialized.\n");
