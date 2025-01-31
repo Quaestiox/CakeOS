@@ -139,3 +139,30 @@ int int2str(char* dst, int num) {
   return start + 14 - i;
 }
 
+void strcat(char *dest, const char *src) {
+    while (*dest != '\0') {
+        dest++;
+    }
+
+    while (*src != '\0') {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+
+    *dest = '\0';
+}
+
+int strpushchar(char* str, char c){
+    int len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+
+    str[len] = c;
+    str[len + 1] = '\0';
+
+
+    return 0;
+}
+

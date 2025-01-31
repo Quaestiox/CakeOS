@@ -175,6 +175,6 @@ void keyboard_init(){
 
 char get_last_key(){
 	char res = last_key;
-	last_key = '0';
+	last_key = '\0';
 	return res;
 }

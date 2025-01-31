@@ -15,5 +15,7 @@ int istrncmp(const char* s1, const char* s2, int n);
 int strnlen_terminator(const char* str, int max, char terminator);
 char tolower(char s1);
 int int2str(char* str, int num);
+void strcat(char *dest, const char *src);
+int strpushchar(char* str, char c);
 
 #endif
