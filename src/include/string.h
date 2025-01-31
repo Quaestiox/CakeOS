@@ -17,5 +17,5 @@ char tolower(char s1);
 int int2str(char* str, int num);
 void strcat(char *dest, const char *src);
 int strpushchar(char* str, char c);
-
+char*  trim(char *str);
 #endif

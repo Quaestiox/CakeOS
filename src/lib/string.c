@@ -166,3 +166,25 @@ int strpushchar(char* str, char c){
     return 0;
 }
 
+int isspace(char c) {
+    return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' || c == '\f');
+}
+
+char* trim(char *str) {
+	char* res;
+    while (*str && isspace((unsigned char)*str)) {
+        str++;
+    }
+    
+	res = str;
+    if (*str) {
+        char *end = str + strlen(str) - 1;
+        while (end > str && isspace((unsigned char)*end)) {
+            end--;
+        }
+        *(end + 1) = '\0';
+    }
+	return res;
+}
+
+

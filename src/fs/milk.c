@@ -65,6 +65,7 @@ u32 size_length[file_num];
       print_string(" ");
     }
     print_string(info->filename);
+	print_char('\n');
   }
   return -1;
 
@@ -83,23 +84,26 @@ static i32 milk_fs_stat_file(char* filename, file_stat_t* stat){
 
 void init_fs_milk(){
 	milk_fs.type = MILK;
-	milk_fs.partition.offset = MILK_PARTITION;
+	milk_fs.partition.offset = MILK_PARTITION * 512;
 
 	milk_fs.stat_file = milk_fs_stat_file;
 	milk_fs.read_data = milk_fs_read_data;
 	milk_fs.write_data = milk_fs_write_data;
 	milk_fs.list_dir = milk_fs_list_dir;
 
-	ata_read_sector(0 + milk_fs.partition.offset, sizeof(u32), (char*)&file_num);
+	read_hard_disk((char*)&file_num,  milk_fs.partition.offset, sizeof(u32));
 
 	u32 info_size = file_num * sizeof(milk_info_t);
 	file_info = (milk_info_t*)kmalloc(info_size);
-	ata_read_sector( 4 + milk_fs.partition.offset, info_size, (char*)file_info);
+	read_hard_disk((char*)file_info, 4 + milk_fs.partition.offset,info_size );
 	for (int i = 0; i < file_num; i++){
 		milk_info_t* info = file_info + i;
 		print_string(info->filename);
 		print_string("\n");
 	}
+	print_string("file_num:");
+	print_number(file_num);
+	print_char('\n');
 	print_string("MILK file system initialized.\n");
 
 }
