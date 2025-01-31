@@ -55,6 +55,7 @@ void read_terminal(){
 void shell_start(){
 //	enable_interrupt();
 	screen_clean();
+	print_string("Welcome to CakeOS\n");
 	print_string("shell v1.0.0\n");
 	while(1){
 		print_string("root:>");
