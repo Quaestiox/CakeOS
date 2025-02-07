@@ -40,6 +40,7 @@ void p2(void* arg){
 
 
 void kernel_main(){
+	print_init();
 	screen_clean();	
 
 

@@ -82,6 +82,7 @@ struct task_struct* task_search(enum task_status status){
 
 void schedule(){
 
+	disable_interrupt();
 	struct task_struct* current = running_task();
 	struct task_struct* next = task_search(TASK_READY);
 

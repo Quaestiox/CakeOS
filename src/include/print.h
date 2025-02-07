@@ -15,4 +15,6 @@ void screen_clean();
 
 void print_number(int num);
 
+void print_init();
+
 #endif

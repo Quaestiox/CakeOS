@@ -4,6 +4,9 @@
 #include "io.h"
 #include "idt.h"
 #include "string.h"
+#include "lock.h"
+
+static lock_t print_lock;
 
 struct ScreenChar* buffer = (struct ScreenChar*)0xb8000;
 i32 row_pos = 0;
@@ -90,15 +93,18 @@ void print_char(char c){
 }
 
 void print_string(char* str){
+	lock(&print_lock);
 	for (i32 i = 0; 1; i++){
 		char c = (u8)str[i];
 
 		if(c == '\0'){
+			unlock(&print_lock);
 			return;
 		}
 
 		print_char(c);
 	}
+	unlock(&print_lock);
 }
 
 void print_number(int num){
@@ -115,9 +121,14 @@ void reset_pos(){
 	row_pos = 0;
 }
 void screen_clean(){
+	lock(&print_lock);
 	for(i32 row = 0; row < VGA_HEIGHT; row ++){
 		clean_row(row);
 	}
 	reset_pos();
+	unlock(&print_lock);
 }
 
+void print_init(){
+	lock_init(&print_lock);
+}

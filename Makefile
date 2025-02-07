@@ -77,6 +77,7 @@ build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/thread_asm.o \
 					build/kernel/disk_asm.o \
 					build/kernel/program_asm.o \
+					build/kernel/lock_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} \
 					${fs_c_object_file}
@@ -89,6 +90,7 @@ build/kernel.bin: build/kernel/start_asm.o \
 					build/kernel/thread_asm.o \
 					build/kernel/disk_asm.o \
 					build/kernel/program_asm.o \
+					build/kernel/lock_asm.o \
  					${lib_c_object_file} \
 					${kernel_c_object_file} \
 					${fs_c_object_file} \
