@@ -1,9 +1,13 @@
 #include "keyboard.h"
 #include "io.h"
 #include "print.h"
+#include "lock.h"
 
 static bool caps_status, shift_status, ext_scancode;
 static char last_key;
+//static lock_t key_lock;
+
+static key_buffer_t key_buffer = {{0},0,0};
 
 static char keymap[][4] = {
     /* 扫描码 未与 shift 组合  与 shift 组合 以及相关状态 */
@@ -108,6 +112,19 @@ static char keymap[][4] = {
     /* 0x5F */ {INV, INV, false, false}, // PrintScreen
 };
 
+void enqueue_key(char key){
+	key_buffer.buffer[key_buffer.head] = key;
+	key_buffer.head = (key_buffer.head + 1) % KEY_BUFFER_SIZE;
+}
+
+char dequeue_key(){
+	char res = '\0';
+	if (key_buffer.head != key_buffer.tail){
+		res = key_buffer.buffer[key_buffer.tail];
+		key_buffer.tail = (key_buffer.tail + 1) % KEY_BUFFER_SIZE;
+	}
+	return res;
+}
 void keyboard_handler(){
 	bool shift = false;
 
@@ -147,7 +164,8 @@ void keyboard_handler(){
 		u8 index = (scancode &= 0x00ff);
 
 		char character = keymap[index][shift];
-		last_key = character;
+		enqueue_key(character);
+//		last_key = character;
 		if(character){
 			print_char(character);
 			return;
@@ -169,7 +187,6 @@ void keyboard_handler(){
 
 void keyboard_init(){
 	caps_status = shift_status = ext_scancode = false;
-
 	print_string("Keyboard init done.\n");
 }
 
@@ -178,3 +195,4 @@ char get_last_key(){
 	last_key = '\0';
 	return res;
 }
+

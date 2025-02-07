@@ -37,7 +37,8 @@ void read_terminal(){
 	char str[256] = {'\0'};
 	char c = '\0';
 	while(1){
-		c = get_last_key();
+		c = dequeue_key();
+//		c = get_last_key();
 		if ( c != '\0' ){
 			if (c == '\n'){
 				break;

@@ -137,7 +137,6 @@ void idle_thread(void* arg){
 	enable_interrupt();
 
 	while(1){
-
 	}
 }
 

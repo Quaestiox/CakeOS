@@ -10,7 +10,6 @@ void lock_init(lock_t *lk){
 
 void lock(lock_t *lk){
 	while (atomic_exchange(&lk->hold , LOCKED) != UNLOCKED) {
-		print_char('!');
 		schedule();
 	}
 }
