@@ -15,20 +15,6 @@ enum task_status{
 	TASK_DIED
 };
 
-/*
-struct thread_stack{
-	u32 ebp;
-	u32 ebx;
-	u32 edi;
-	u32 esi;
-	
-	void (*eip)(thread_func* func, void* func_arg);
-
-	void (*unused_retaddr);
-	thread_func* function;
-	void* func_arg;
-};
-*/
 struct registers{
 	u32 edi;
 	u32 esi;
@@ -62,14 +48,10 @@ struct task_struct{
 
 	u8 clock;
 	u8 run_clock;
-//	struct link_list_node ready_node;
-//	struct link_list_node all_node;
-//	u32* dictionary;
 	u32 magic;
 };
 
 
-//struct task_struct* thread_start(thread_func function, void* func_arg, char* name, int prior);
 void schedule();
 struct task_struct* running_task();
 

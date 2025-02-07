@@ -21,25 +21,6 @@ struct disk{
 };
 
 
-struct partition_table_entry{
-	u8 bootable;
-	u8 start_head;
-	u8 start_sector;
-	u8 start_chs;
-	u8 fs_type;
-	u8 end_head;
-	u8 end_sector;
-	u8 end_chs;
-	u32 start_lba;
-	u32 sector_count;
-} __attribute__((packed));
-
-struct boot_sector{
-	u8 code[446];
-	struct partition_table_entry partition_table[4];
-	u16 signature;
-}__attribute__((packed));
-
 
 void get_disk_info(struct disk* hd);
 
