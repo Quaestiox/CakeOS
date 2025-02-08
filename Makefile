@@ -48,7 +48,7 @@ ${os_img}: ${bootloader_bin_file} ${kernel_bin_file}
 	dd if=build/boot.bin of=build/${os_img} bs=512 count=1
 	dd if=/dev/zero bs=512 count=1 >> build/${os_img}
 	dd if=build/loader.bin bs=512 count=2  conv=sync >> build/${os_img}
-	dd if=build/kernel.bin >> build/${os_img}
+	dd if=build/kernel.bin bs=512 conv=sync >> build/${os_img}
 	dd if=/dev/zero bs=512 count=2048 >> build/${os_img}
 	dd if=${user_image} bs=512 of=build/${os_img} bs=512 count=1000 seek=200 conv=notrunc
 
